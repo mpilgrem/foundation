@@ -149,12 +149,12 @@ instance Bits.Bits Word256 where
 #else
 (+) (Word256 (W64# a3) (W64# a2) (W64# a1) (W64# a0))
     (Word256 (W64# b3) (W64# b2) (W64# b1) (W64# b0)) =
-    Word256 (W64# s3) (W64# s2) (W64# s1) (W64# s0)
+    Word256 (W64# (wordToWord64# s3)) (W64# (wordToWord64# s2)) (W64# (wordToWord64# s1)) (W64# (wordToWord64# s0))
   where
-    !(# c0, s0 #) = plusWord2# a0 b0
-    !(# c1, s1 #) = plusWord3# a1 b1 c0
-    !(# c2, s2 #) = plusWord3# a2 b2 c1
-    !s3           = plusWord3NoCarry# a3 b3 c2
+    !(# c0, s0 #) = plusWord2# (word64ToWord# a0) (word64ToWord# b0)
+    !(# c1, s1 #) = plusWord3# (word64ToWord# a1) (word64ToWord# b1) c0
+    !(# c2, s2 #) = plusWord3# (word64ToWord# a2) (word64ToWord# b2) c1
+    !s3           = plusWord3NoCarry# (word64ToWord# a3) (word64ToWord# b3) c2
 
     plusWord3NoCarry# a b c = plusWord# (plusWord# a b) c
     plusWord3# a b c

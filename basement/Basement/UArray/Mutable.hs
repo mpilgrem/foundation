@@ -9,6 +9,7 @@
 -- to allow easy use with Foreign interfaces, ByteString
 -- and always aligned to 64 bytes.
 --
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE MagicHash #-}
 {-# LANGUAGE UnboxedTuples #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -40,6 +41,9 @@ module Basement.UArray.Mutable
     , withMutablePtrHint
     ) where
 
+#if MIN_VERSION_ghc_prim(0,9,0)
+import           GHC.Exts (sameMutableByteArray#)
+#endif
 import           GHC.Prim
 import           GHC.Types
 import           GHC.Ptr
@@ -104,7 +108,7 @@ sub :: (PrimMonad prim, PrimType ty)
     -> prim (MUArray ty (PrimState prim))
 sub (MUArray start sz back) dropElems' takeElems
     | takeElems <= 0 = empty
-    | Just keepElems <- sz - dropElems, keepElems > 0 
+    | Just keepElems <- sz - dropElems, keepElems > 0
                      = pure $ MUArray (start `offsetPlusE` dropElems) (min (CountOf takeElems) keepElems) back
     | otherwise      = empty
   where

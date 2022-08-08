@@ -80,7 +80,7 @@ instance Cast Word64 Int64 where
 instance Cast Word   Int where
     cast (W# w) = I# (word2Int# w)
 
-#if WORD_SIZE_IN_BITS == 64
+#if WORD_SIZE_IN_BITS == 64 && !MIN_VERSION_GLASGOW_HASKELL(9,0,4,0)
 instance Cast Word   Word64 where
     cast (W# w) = W64# w
 instance Cast Word64 Word where

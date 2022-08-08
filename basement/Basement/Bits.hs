@@ -285,7 +285,8 @@ instance BitOps Word32 where
 
 -- Word ---------------------------------------------------------------------
 
-#if WORD_SIZE_IN_BITS == 64
+#if WORD_SIZE_IN_BITS == 64 && !MIN_VERSION_GLASGOW_HASKELL(9,0,4,0)
+
 instance FiniteBitsOps Word where
     numberOfBits _ = 64
     rotateL w (CountOf i) = w `OldBits.rotateL` i
@@ -314,7 +315,7 @@ instance BitOps Word where
 
 -- Word64 ---------------------------------------------------------------------
 
-#if WORD_SIZE_IN_BITS == 64
+#if WORD_SIZE_IN_BITS == 64 && !MIN_VERSION_GLASGOW_HASKELL(9,0,4,0)
 instance FiniteBitsOps Word64 where
     numberOfBits _ = 64
     rotateL w (CountOf i) = w `OldBits.rotateL` i
@@ -427,7 +428,7 @@ instance BitOps Int32 where
     (.>>.)   a (CountOf w) = (a `OldBits.shiftR` w)
 -- Int64 ----------------------------------------------------------------------
 
-#if WORD_SIZE_IN_BITS == 64
+#if WORD_SIZE_IN_BITS == 64 && !MIN_VERSION_GLASGOW_HASKELL(9,0,4,0)
 instance FiniteBitsOps Int64 where
     numberOfBits _ = 64
     rotateL w (CountOf i) = w `OldBits.rotateL` i

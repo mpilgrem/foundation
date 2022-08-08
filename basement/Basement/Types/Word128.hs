@@ -128,10 +128,11 @@ instance Bits.Bits Word128 where
 #if WORD_SIZE_IN_BITS < 64
 (+) = applyBiWordOnNatural (Prelude.+)
 #else
-(+) (Word128 (W64# a1) (W64# a0)) (Word128 (W64# b1) (W64# b0)) = Word128 (W64# s1) (W64# s0)
+(+) (Word128 (W64# a1) (W64# a0)) (Word128 (W64# b1) (W64# b0)) =
+      Word128 (W64# (wordToWord64# s1)) (W64# (wordToWord64# s0))
   where
-    !(# carry, s0 #) = plusWord2# a0 b0
-    s1               = plusWord# (plusWord# a1 b1) carry
+    !(# carry, s0 #) = plusWord2# (word64ToWord# a0) (word64ToWord# b0)
+    s1               = plusWord# (plusWord# (word64ToWord# a1) (word64ToWord# b1)) carry
 #endif
 
 -- temporary available until native operation available

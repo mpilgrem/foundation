@@ -18,7 +18,7 @@ import           Basement.Compat.Primitive
 import           Basement.Numerical.Number
 import qualified Prelude
 import           GHC.Types (Float(..), Double(..))
-import           GHC.Prim (plusWord#, plusFloat#, (+#), (+##))
+import           GHC.Prim (int64ToWord64#, plusInt64#, plusWord#, plusFloat#, word64ToInt64#, (+#), (+##))
 import           GHC.Int
 import           GHC.Word
 import           Basement.Bounded
@@ -78,7 +78,7 @@ instance Additive Int32 where
     scale = scaleNum
 instance Additive Int64 where
     azero = 0
-#if WORD_SIZE_IN_BITS == 64
+#if WORD_SIZE_IN_BITS == 64 && !MIN_VERSION_GLASGOW_HASKELL(9,0,4,0)
     (I64# a) + (I64# b) = I64# (a +# b)
 #else
     (I64# a) + (I64# b) = I64# (a `plusInt64#` b)
@@ -106,7 +106,7 @@ instance Additive Word32 where
     scale = scaleNum
 instance Additive Word64 where
     azero = 0
-#if WORD_SIZE_IN_BITS == 64
+#if WORD_SIZE_IN_BITS == 64 && !MIN_VERSION_GLASGOW_HASKELL(9,0,4,0)
     (W64# a) + (W64# b) = W64# (a `plusWord#` b)
 #else
     (W64# a) + (W64# b) = W64# (int64ToWord64# (word64ToInt64# a `plusInt64#` word64ToInt64# b))
